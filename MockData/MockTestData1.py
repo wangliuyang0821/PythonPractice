@@ -24,6 +24,6 @@ df = pd.DataFrame(data)
 
 df.to_excel("test_data.xlsx",index=False,columns=["id","name","age","address","email","gender"],engine='openpyxl')
 
-print("文件路径：",os.path.abspath("test_data.xlsx"))
+print("文件路径：", os.path.abspath("../files/xlsx/test_data.xlsx"))
 
 

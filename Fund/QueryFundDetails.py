@@ -8,6 +8,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import time
 
+from Utils.MysqlUtils import insert_json_to_mysql
+
 
 def get_fund_info_by_selenium(symbol):
     """使用Selenium从网页获取基金的管理费和成立时间（备用方式）"""
@@ -102,6 +104,22 @@ def query_fund_metrics(symbol):
             print(f"近十年收益率: {total_return_10y:.2f}%")
             result['total_return_10y'] = f"{total_return_10y:.2f}%"
 
+        # 计算近五年时间段
+        five_years_ago = today - pd.DateOffset(years=5)
+        hist_5y = hist.loc[five_years_ago:today]
+        print(f"*****{five_years_ago}*******")
+        if not hist_5y.empty:
+            # 确保至少有起始和结束数据
+            if len(hist_5y) >= 2:
+                start_price_5y = hist_5y['Close'].iloc[0]
+                end_price_5y = hist_5y['Close'].iloc[-1]
+                total_return_5y = (end_price_5y / start_price_5y - 1) * 100
+                print(f"近五年收益率: {total_return_5y:.2f}%")  # [6,7](@ref)
+                result['total_return_5y'] = f"{total_return_5y:.2f}%"
+            else:
+                print("近五年收益率: 数据不足")
+                result['total_return_5y'] = "N/A"
+
         total_years = (hist.index[-1] - hist.index[0]).days / 365.25
         if total_years > 0:
             annual_return = ((hist['Close'].iloc[-1] / hist['Close'].iloc[0]) ** (1/total_years) - 1) * 100
@@ -123,9 +141,12 @@ def query_fund_metrics(symbol):
             eps_est = hist['Close'] / pe
             pe_series = hist['Close'] / eps_est
             pe_median = pe_series.median()
+
+            is_buy = 1 if float(pe_median) > 0 and float(pe) > 0 and float(pe_median) > float(pe) else 0
+
             print(f"历史市盈率中位数（估算）: {pe_median:.2f}")
             result['pe_median'] = f"{pe_median:.2f}"
-            is_buy = 1 if pe_median > 0 and pe > 0 and pe_median > pe else 0
+
             print(f"是否历史PE中位数大于当前PE: {is_buy}")
             result["is_buy"] = is_buy
         else:
@@ -160,6 +181,7 @@ def query_fund_metrics(symbol):
             selenium_result = get_fund_info_by_selenium(symbol)
             print(f"成立时间: {selenium_result['成立时间']}")
             print(f"管理费: {selenium_result['管理费']}")
+    insert_json_to_mysql(result,"fund_metrics")
     print(result)
     print(f"\n")
 
