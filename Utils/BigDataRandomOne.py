@@ -61,7 +61,10 @@ def get_one():
         "57": "hdfs小文件解决方式，hive和spark",
         "58": "app下沉到dws的标准",
         "59": "dwd的几种类型以及其作用",
-        "60": "doris的查询优化有那些方式"
+        "60": "doris的查询优化有那些方式",
+        "61": "flink一致性是什么，如何实现",
+        "62": "spark中group by和reduceby的区别",
+        "63": "spark中coalesce和repartition的区别"
     }
 
     # 和 Java 一样：size-1, 然后随机 [0, len-1] 的整数
