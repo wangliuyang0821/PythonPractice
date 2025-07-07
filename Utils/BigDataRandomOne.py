@@ -64,7 +64,8 @@ def get_one():
         "60": "doris的查询优化有那些方式",
         "61": "flink一致性是什么，如何实现",
         "62": "spark中group by和reduceby的区别",
-        "63": "spark中coalesce和repartition的区别"
+        "63": "spark中coalesce和repartition的区别",
+        "64": "coalesce和repartition的区别"
     }
 
     # 和 Java 一样：size-1, 然后随机 [0, len-1] 的整数
