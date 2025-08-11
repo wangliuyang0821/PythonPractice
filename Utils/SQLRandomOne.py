@@ -12,7 +12,7 @@ def get_one():
         "8": "首次下单后第二天连续下单的用户比率",
         "9": "会话划分 user_id,pageid,time，超过60s是另一个会话,用sql实现",
         "10": "order left join user, user = 100出现数据倾斜",
-        "11": "table:user_id,type,time,计算每个用户的在线时长"
+        "11": "table:user_id,type(in = 1,out = -1),time,计算每个用户的在线时长"
     }
 
     keys = list(data_map.keys())
